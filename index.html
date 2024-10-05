@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Grid Hack</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 20px;
+      background-color: #333;
+      /* Dark Gray Background */
+      color: white;
+      /* General text color */
+    }
+
+    #codeNumbers {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    #timer-bar-container {
+      width: 100%;
+      max-width: 720px;
+      /* Limit width of the timer bar */
+      height: 20px;
+      background-color: white;
+      /* The empty bar */
+      margin-bottom: 10px;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #timer-bar {
+      height: 100%;
+      background-color: green;
+      /* The full green timer bar */
+      transition: width 0.1s linear;
+      /* Smooth depletion */
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(17, 35px);
+      /* Reduced space between numbers */
+      gap: 10px;
+      /* Smaller gap between grid numbers */
+      margin-top: 10px;
+    }
+
+    .grid-number {
+      width: 35px;
+      height: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: transparent;
+      /* No background for grid numbers */
+      cursor: pointer;
+      font-size: 24px;
+      color: gray;
+    }
+
+    .highlight {
+      color: green;
+      /* Green for correctly selected code numbers */
+    }
+
+    .code-number {
+      color: gray;
+    }
+
+    .selected {
+      background-color: white;
+      color: black;
+      /* Change text to black when selected */
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="codeNumbers"></div>
+
+  <div id="timer-bar-container">
+    <div id="timer-bar"></div>
+  </div>
+
+  <div id="grid"></div>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
