@@ -14,9 +14,14 @@
       margin: 0;
       padding: 20px;
       background-color: #333;
-      /* Dark Gray Background */
       color: white;
-      /* General text color */
+    }
+
+    #tierSelector {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 36px;
     }
 
     #codeNumbers {
@@ -27,10 +32,8 @@
     #timer-bar-container {
       width: 100%;
       max-width: 720px;
-      /* Limit width of the timer bar */
       height: 20px;
       background-color: white;
-      /* The empty bar */
       margin-bottom: 10px;
       border-radius: 10px;
       position: relative;
@@ -40,17 +43,13 @@
     #timer-bar {
       height: 100%;
       background-color: green;
-      /* The full green timer bar */
       transition: width 0.1s linear;
-      /* Smooth depletion */
     }
 
     #grid {
       display: grid;
       grid-template-columns: repeat(17, 35px);
-      /* Reduced space between numbers */
       gap: 10px;
-      /* Smaller gap between grid numbers */
       margin-top: 10px;
     }
 
@@ -61,7 +60,6 @@
       justify-content: center;
       align-items: center;
       background-color: transparent;
-      /* No background for grid numbers */
       cursor: pointer;
       font-size: 24px;
       color: gray;
@@ -69,7 +67,6 @@
 
     .highlight {
       color: green;
-      /* Green for correctly selected code numbers */
     }
 
     .code-number {
@@ -79,7 +76,6 @@
     .selected {
       background-color: white;
       color: black;
-      /* Change text to black when selected */
     }
 
     #instructions {
@@ -92,6 +88,16 @@
 
 <body>
 
+  <!-- Tier Selector -->
+  <div id="tierSelector">
+    <label for="tiers">Select Tier:</label>
+    <select id="tiers">
+      <option value="B">B Tier (180 seconds)</option>
+      <option value="A">A Tier (150 seconds)</option>
+      <option value="S">S Tier (120 seconds)</option>
+    </select>
+  </div>
+
   <div id="codeNumbers"></div>
 
   <div id="timer-bar-container">
@@ -99,7 +105,7 @@
   </div>
 
   <div id="grid"></div>
-  <!-- Instructions Text Below Grid -->
+
   <div id="instructions">
     Use <span class="highlight">W</span>, <span class="highlight">A</span>, <span class="highlight">S</span>, <span
       class="highlight">D</span> to select a number and <span class="highlight">Enter</span> to confirm the number.

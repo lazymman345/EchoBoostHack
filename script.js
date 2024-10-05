@@ -1,14 +1,35 @@
 // Variables
 let grid = [];
-let code = [];  // Empty array to generate new codes
+let code = [];
 let currentCodeIndex = 0;
-let maxTime = 180;  // Full time (90 seconds)
+let maxTime = 180;  // Default time for B Tier
 let timeLeft = maxTime;
 let gridColumns = 17;
 let gridRows = 6;
-let selectedRow = 0;  // Row position of the selected number
-let selectedCol = 0;  // Column position of the selected number
-let countdown;  // To manage the countdown timer
+let selectedRow = 0;
+let selectedCol = 0;
+let countdown;
+
+// Tier Selector Functionality
+const tierSelector = document.getElementById('tiers');
+tierSelector.addEventListener('change', function () {
+    const selectedTier = tierSelector.value;
+    if (selectedTier === 'B') {
+        maxTime = 180;
+    } else if (selectedTier === 'A') {
+        maxTime = 150;
+    } else if (selectedTier === 'S') {
+        maxTime = 120;
+    }
+    resetGame();  // Reset game to apply new tier
+});
+
+// Prevent "Enter" from interacting with the tier selector
+tierSelector.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();  // Prevent default behavior of Enter in the dropdown
+    }
+});
 
 // Function to generate random number between min and max
 function getRandomNumber(min, max) {
@@ -18,8 +39,8 @@ function getRandomNumber(min, max) {
 // Function to generate a new random code
 function generateCode() {
     code = [];
-    for (let i = 0; i < 6; i++) {  // Generate 6 random numbers for the code
-        code.push(getRandomNumber(10, 99));  // Random numbers between 10 and 99
+    for (let i = 0; i < 6; i++) {
+        code.push(getRandomNumber(10, 99));
     }
 }
 
@@ -31,8 +52,8 @@ function generateGrid() {
 
     for (let row = 0; row < gridRows; row++) {
         for (let col = 0; col < gridColumns; col++) {
-            let num = getRandomNumber(10, 99);  // Generate a random number between 10 and 99
-            grid.push(num);  // Add to grid array
+            let num = getRandomNumber(10, 99);
+            grid.push(num);
 
             // Create and add a number element in the grid
             let gridItem = document.createElement('div');
@@ -63,83 +84,67 @@ function placeCodeNumberInGrid() {
 function highlightSelectedNumber() {
     let gridItems = document.getElementsByClassName('grid-number');
     Array.from(gridItems).forEach(item => {
-        item.classList.remove('selected');  // Remove 'selected' class from all items
+        item.classList.remove('selected');
         if (parseInt(item.dataset.row) === selectedRow && parseInt(item.dataset.col) === selectedCol) {
-            item.classList.add('selected');  // Add 'selected' class to the current selected item
+            item.classList.add('selected');
         }
     });
 }
 
 // Check if the selected number matches the current code number
 function checkSelectedNumber() {
-    let selectedNumber = grid[selectedRow * gridColumns + selectedCol];  // Get the number in the grid at the selected position
-    if (parseInt(selectedNumber) === code[currentCodeIndex]) {  // Compare as integers
-        // Turn the corresponding code number at the top green
+    let selectedNumber = grid[selectedRow * gridColumns + selectedCol];
+    if (parseInt(selectedNumber) === code[currentCodeIndex]) {
         let codeNumbers = document.querySelectorAll('#codeNumbers span');
         if (codeNumbers[currentCodeIndex]) {
-            codeNumbers[currentCodeIndex].style.color = 'green';  // Update color directly to green
+            codeNumbers[currentCodeIndex].style.color = 'green';
         }
 
-        currentCodeIndex++;  // Move to the next code number
+        currentCodeIndex++;
 
-        // Reset the grid after selecting the correct code number
         generateGrid();
 
-        // Check if the entire code is found
         if (currentCodeIndex === code.length) {
             alert('Code cracked!');
-            resetGame();  // Call reset function when code is cracked
+            resetGame();
         }
     }
 }
 
 // Function to reset the game
 function resetGame() {
-    currentCodeIndex = 0;  // Reset code index
-    generateCode();  // Generate a new code
-    updateCodeDisplay();  // Update code numbers at the top
-    generateGrid();  // Regenerate the grid with the new code
-    resetTimer();  // Reset the timer
+    currentCodeIndex = 0;
+    generateCode();
+    updateCodeDisplay();
+    generateGrid();
+    resetTimer();
 }
 
 // Function to update the code numbers displayed at the top
 function updateCodeDisplay() {
     let codeContainer = document.getElementById('codeNumbers');
-    codeContainer.innerHTML = '';  // Clear existing code numbers
+    codeContainer.innerHTML = '';
     code.forEach((num, index) => {
         let span = document.createElement('span');
         span.innerHTML = `${num} `;
-        span.classList.add('code-number');  // Initially grey code numbers
+        span.classList.add('code-number');
         codeContainer.appendChild(span);
     });
 }
 
 // Handle WASD movement for navigation
-function handleMovement(event) {
+document.addEventListener('keydown', function (event) {
     switch (event.key) {
-        case 'w':  // Move up
-            if (selectedRow > 0) selectedRow--;
-            break;
-        case 's':  // Move down
-            if (selectedRow < gridRows - 1) selectedRow++;
-            break;
-        case 'a':  // Move left
-            if (selectedCol > 0) selectedCol--;
-            break;
-        case 'd':  // Move right
-            if (selectedCol < gridColumns - 1) selectedCol++;
-            break;
-        case 'Enter':  // Confirm selected number
-            checkSelectedNumber();
-            break;
-        default:
-            return;  // Exit function if it's not WASD or Enter
+        case 'w': if (selectedRow > 0) selectedRow--; break;
+        case 's': if (selectedRow < gridRows - 1) selectedRow++; break;
+        case 'a': if (selectedCol > 0) selectedCol--; break;
+        case 'd': if (selectedCol < gridColumns - 1) selectedCol++; break;
+        case 'Enter': checkSelectedNumber(); break;
     }
+    highlightSelectedNumber();
+});
 
-    highlightSelectedNumber();  // Update the highlight for the selected number
-}
-
-// Function to start the countdown timer with a depleting bar
+// Function to start the countdown timer
 function startTimer() {
     let timerBar = document.getElementById('timer-bar');
 
@@ -148,12 +153,11 @@ function startTimer() {
         let widthPercent = (timeLeft / maxTime) * 100;
         timerBar.style.width = `${widthPercent}%`;
 
-        // Gradually change the color from green to white as time runs out
         if (widthPercent <= 0) {
             clearInterval(countdown);
             alert('Time is up!');
         }
-    }, 1000); // Update every second
+    }, 1000);
 }
 
 // Function to reset the timer
@@ -177,10 +181,8 @@ function init() {
     generateCode();  // Generate the initial code
     updateCodeDisplay();  // Display the initial code numbers
     generateGrid();  // Generate initial grid
-    startTimer();  // Start the 90-second timer with the depleting bar
+    startTimer();  // Start the timer
     updateGridEveryTenSeconds();  // Start grid updating every 10 seconds
-
-    document.addEventListener('keydown', handleMovement);  // Listen for keyboard inputs
 }
 
 init();  // Start the game
